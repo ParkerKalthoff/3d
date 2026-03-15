@@ -22,14 +22,14 @@ MIN_FRAME_TIME = 1.0 / FPS_CAP
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 verticies = [
-    (0.0, 0.0, 0.0),
-    (0.0, 0.0, 1.0),
-    (0.0, 1.0, 0.0),
-    (0.0, 1.0, 1.0),
-    (1.0, 0.0, 0.0),
-    (1.0, 0.0, 1.0),
-    (1.0, 1.0, 0.0),
-    (1.0, 1.0, 1.0),
+    (0.01, 0.01, 0.01),
+    (0.01, 0.01, 1.01),
+    (0.01, 1.01, 0.01),
+    (0.01, 1.01, 1.01),
+    (1.01, 0.01, 0.01),
+    (1.01, 0.01, 1.01),
+    (1.01, 1.01, 0.01),
+    (1.01, 1.01, 1.01),
 ]
 
 edges = [
@@ -102,26 +102,6 @@ def main():
 
         keys = pygame.key.get_pressed()
 
-        screen.fill((0, 0, 0))
-
-        proj_verts: list[tuple[int, int]] = []
-
-        for vert in verticies:
-            px, py = project(vert[0], vert[1], vert[2], WIDTH, HEIGHT, 270, 2)
-
-            try:
-                screen.set_at((px, py), (255, 255, 255))
-            except OverflowError:
-                pass
-
-            proj_verts.append((px, py))
-
-        for edge in edges:
-            x1, y1 = proj_verts[edge[0]][0], proj_verts[edge[0]][1]
-            x2, y2 = proj_verts[edge[1]][0], proj_verts[edge[1]][1]
-
-            plotline.plotLine(x1, y1, x2, y2, screen)
-
         if keys[pygame.K_a]:
             move_verts(move.move_x, 0.1)
 
@@ -148,6 +128,23 @@ def main():
 
         if keys[pygame.K_z]:
             rotate_verts(rotate.rotate_z, 0.03)
+
+        screen.fill((0, 0, 0))
+
+        proj_verts: list[tuple[int, int]] = []
+
+        for vert in verticies:
+            px, py = project(vert[0], vert[1], vert[2], WIDTH, HEIGHT, 270, 2)
+
+            screen.set_at((px, py), (255, 255, 255))
+
+            proj_verts.append((px, py))
+
+        for edge in edges:
+            x1, y1 = proj_verts[edge[0]][0], proj_verts[edge[0]][1]
+            x2, y2 = proj_verts[edge[1]][0], proj_verts[edge[1]][1]
+
+            plotline.plotLine(x1, y1, x2, y2, screen)
 
         pygame.display.flip()
 
